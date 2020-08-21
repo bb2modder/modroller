@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import net.bb2.modroller.scenes.CompletedScene;
 import net.bb2.modroller.scenes.FindBaseDirScene;
 import net.bb2.modroller.scenes.ProcessPackagesScene;
 
@@ -25,10 +26,13 @@ public class DesktopLauncher extends Application {
 	    findBaseDirScene.initialise(primaryStage);
 
 	    ProcessPackagesScene processPackagesScene = injector.getInstance(ProcessPackagesScene.class);
-
+	    CompletedScene completedScene = injector.getInstance(CompletedScene.class);
 
 	    findBaseDirScene.setOnComplete(() -> {
 		    processPackagesScene.show(primaryStage);
+	    });
+	    processPackagesScene.setOnComplete(() -> {
+	    	completedScene.show(primaryStage);
 	    });
 
 	    findBaseDirScene.show(primaryStage);
