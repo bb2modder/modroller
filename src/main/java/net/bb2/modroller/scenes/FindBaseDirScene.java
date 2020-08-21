@@ -1,5 +1,6 @@
 package net.bb2.modroller.scenes;
 
+import com.google.inject.Inject;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,22 +11,28 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.bb2.modroller.BBDiscovery;
+import net.bb2.modroller.config.ModrollerConfig;
 
 import java.io.File;
 
-public class InitialSetupScene {
+public class FindBaseDirScene extends ModRollerScene {
 
-	private final Scene scene;
 	private final GridPane grid;
 	private final BBDiscovery bbDiscovery = new BBDiscovery();
 	private final TextField bb2DirTextField;
 	private final FileChooser fileChooser;
 	private final Label validityLabel;
+	private final Button dirPickerButton;
+
+	private final ModrollerConfig config;
+	private final Button processPackagesButton;
 
 	private File bbDirectory;
 	private boolean bbDirectoryCorrect = false;
 
-	public InitialSetupScene(Stage primaryStage) {
+	@Inject
+	public FindBaseDirScene(ModrollerConfig config) {
+		this.config = config;
 		grid = new GridPane();
 		grid.setPadding(new Insets(12,12,12,12));
 
@@ -42,30 +49,39 @@ public class InitialSetupScene {
 		fileChooser.setInitialFileName("BloodBowl2.exe");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Executable", "BloodBowl2.exe"));
 
-		Button dirPickerButton = new Button("Find...");
-		dirPickerButton.setOnAction(event -> {
-			File file = fileChooser.showOpenDialog(primaryStage);
-			if (file != null) {
-				bbDirChanged(file);
-			}
-		});
+		dirPickerButton = new Button("Find...");
 
 		grid.addRow(1, bb2DirTextField, dirPickerButton);
 
 		validityLabel = new Label();
 		grid.addRow(2, validityLabel);
 
+		processPackagesButton = new Button();
+		processPackagesButton.setText("Process data packages");
+		processPackagesButton.setVisible(false);
+		processPackagesButton.setOnAction(event -> {
+			if (completionHandler != null) {
+				completionHandler.onAction();
+			}
+		});
+
+		grid.addRow(3, processPackagesButton);
+
 		this.scene = new Scene(grid, SceneDefaults.WIDTH, SceneDefaults.HEIGHT);
 
-		bbDiscovery.findBB2Exe().ifPresent(this::bbDirChanged);
+		bbDiscovery.findBB2Exe().ifPresent(this::bbExeChanged);
 	}
 
-	public Scene getScene() {
-		return scene;
+	public void initialise(Stage primaryStage) {
+		dirPickerButton.setOnAction(event -> {
+			File file = fileChooser.showOpenDialog(primaryStage);
+			if (file != null) {
+				bbExeChanged(file);
+			}
+		});
 	}
 
-	private void bbDirChanged(File bb2Exe) {
-		this.bbDirectory = bb2Exe;
+	private void bbExeChanged(File bb2Exe) {
 		bb2DirTextField.setText(bb2Exe.getAbsolutePath());
 		bbDirectory = bb2Exe.getParentFile();
 		fileChooser.setInitialDirectory(bbDirectory);
@@ -76,11 +92,14 @@ public class InitialSetupScene {
 	private void setDirCorrect(boolean isCorrect) {
 		this.bbDirectoryCorrect = isCorrect;
 		if (isCorrect) {
+			config.setBb2Dir(bbDirectory);
 			validityLabel.setText("BloodBowl2.exe found successfully");
 			validityLabel.setTextFill(Color.web("#339933"));
+			processPackagesButton.setVisible(true);
 		} else {
 			validityLabel.setText("You must select your Blood Bowl 2 executable to proceed");
 			validityLabel.setTextFill(Color.web("#993333"));
+			processPackagesButton.setVisible(false);
 		}
 	}
 }

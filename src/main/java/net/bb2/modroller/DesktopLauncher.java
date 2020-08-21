@@ -5,11 +5,8 @@ import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import net.bb2.modroller.scenes.ExampleScene;
-import net.bb2.modroller.scenes.InitialSetupScene;
-
-import java.io.File;
-import java.util.Optional;
+import net.bb2.modroller.scenes.FindBaseDirScene;
+import net.bb2.modroller.scenes.ProcessPackagesScene;
 
 public class DesktopLauncher extends Application {
 
@@ -22,9 +19,19 @@ public class DesktopLauncher extends Application {
 	    primaryStage.getIcons().add(new Image("file:assets/deathroller.gif"));
         primaryStage.setTitle("Modroller");
 
+	    Injector injector = Guice.createInjector();
 
-	    InitialSetupScene initialSetupScene = new InitialSetupScene(primaryStage);
-	    primaryStage.setScene(initialSetupScene.getScene());
+	    FindBaseDirScene findBaseDirScene = injector.getInstance(FindBaseDirScene.class);
+	    findBaseDirScene.initialise(primaryStage);
+
+	    ProcessPackagesScene processPackagesScene = injector.getInstance(ProcessPackagesScene.class);
+
+
+	    findBaseDirScene.setOnComplete(() -> {
+		    processPackagesScene.show(primaryStage);
+	    });
+
+	    findBaseDirScene.show(primaryStage);
 
 	    primaryStage.show();
     }
