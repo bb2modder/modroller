@@ -1,6 +1,5 @@
 package net.bb2.modroller.scenes;
 
-import com.google.inject.Inject;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,7 +29,6 @@ public class FindBaseDirScene extends ModRollerScene {
 	private File bbDirectory;
 	private boolean bbDirectoryCorrect = false;
 
-	@Inject
 	public FindBaseDirScene(ModrollerConfig config) {
 		this.config = config;
 		grid = new GridPane();

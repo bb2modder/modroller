@@ -1,6 +1,5 @@
 package net.bb2.modroller.scenes;
 
-import com.google.inject.Inject;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,7 +14,6 @@ public class CompletedScene extends ModRollerScene {
 
 	private Label currentProgressLabel;
 
-	@Inject
 	public CompletedScene(ModrollerConfig config) {
 		this.config = config;
 
