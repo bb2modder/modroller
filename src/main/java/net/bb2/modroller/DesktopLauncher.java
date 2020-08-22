@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import net.bb2.modroller.scenes.CompletedScene;
 import net.bb2.modroller.scenes.FindBaseDirScene;
+import net.bb2.modroller.scenes.GitUpdateScene;
 import net.bb2.modroller.scenes.ProcessPackagesScene;
 
 public class DesktopLauncher extends Application {
@@ -23,12 +24,16 @@ public class DesktopLauncher extends Application {
 	    findBaseDirScene.initialise(primaryStage);
 
 	    ProcessPackagesScene processPackagesScene = new ProcessPackagesScene();
+	    GitUpdateScene gitUpdateScene = new GitUpdateScene();
 	    CompletedScene completedScene = new CompletedScene();
 
 	    findBaseDirScene.setOnComplete(() -> {
 		    processPackagesScene.show(primaryStage);
 	    });
 	    processPackagesScene.setOnComplete(() -> {
+	    	gitUpdateScene.show(primaryStage);
+	    });
+	    gitUpdateScene.setOnComplete(() -> {
 	    	completedScene.show(primaryStage);
 	    });
 

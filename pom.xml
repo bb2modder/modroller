@@ -22,6 +22,12 @@
             <artifactId>javafx-controls</artifactId>
             <version>14</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.8.1.202007141445-r</version>
+        </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>
