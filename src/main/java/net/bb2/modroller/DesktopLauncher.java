@@ -3,14 +3,11 @@ package net.bb2.modroller;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import net.bb2.modroller.config.ModrollerConfig;
 import net.bb2.modroller.scenes.CompletedScene;
 import net.bb2.modroller.scenes.FindBaseDirScene;
 import net.bb2.modroller.scenes.ProcessPackagesScene;
 
 public class DesktopLauncher extends Application {
-
-	private final ModrollerConfig config = new ModrollerConfig();
 
 	public static void main(String[] args) {
 	    launch(args);
@@ -22,11 +19,11 @@ public class DesktopLauncher extends Application {
         primaryStage.setTitle("Modroller");
 
 
-	    FindBaseDirScene findBaseDirScene =  new FindBaseDirScene(config);
+	    FindBaseDirScene findBaseDirScene =  new FindBaseDirScene();
 	    findBaseDirScene.initialise(primaryStage);
 
-	    ProcessPackagesScene processPackagesScene = new ProcessPackagesScene(config);
-	    CompletedScene completedScene = new CompletedScene(config);
+	    ProcessPackagesScene processPackagesScene = new ProcessPackagesScene();
+	    CompletedScene completedScene = new CompletedScene();
 
 	    findBaseDirScene.setOnComplete(() -> {
 		    processPackagesScene.show(primaryStage);

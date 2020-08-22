@@ -1,0 +1,1 @@
+bin\java.exe -m modroller/net.bb2.modroller.DesktopLauncher

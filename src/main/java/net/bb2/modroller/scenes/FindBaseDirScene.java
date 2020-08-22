@@ -23,14 +23,12 @@ public class FindBaseDirScene extends ModRollerScene {
 	private final Label validityLabel;
 	private final Button dirPickerButton;
 
-	private final ModrollerConfig config;
 	private final Button processPackagesButton;
 
 	private File bbDirectory;
 	private boolean bbDirectoryCorrect = false;
 
-	public FindBaseDirScene(ModrollerConfig config) {
-		this.config = config;
+	public FindBaseDirScene() {
 		grid = new GridPane();
 		grid.setPadding(new Insets(12,12,12,12));
 
@@ -90,7 +88,7 @@ public class FindBaseDirScene extends ModRollerScene {
 	private void setDirCorrect(boolean isCorrect) {
 		this.bbDirectoryCorrect = isCorrect;
 		if (isCorrect) {
-			config.setBb2Dir(bbDirectory);
+			ModrollerConfig.getInstance().setBb2Dir(bbDirectory);
 			validityLabel.setText("BloodBowl2.exe found successfully");
 			validityLabel.setTextFill(Color.web("#339933"));
 			processPackagesButton.setVisible(true);

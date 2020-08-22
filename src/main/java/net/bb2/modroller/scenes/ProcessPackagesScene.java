@@ -12,22 +12,20 @@ import net.bb2.modroller.config.ModrollerConfig;
 public class ProcessPackagesScene extends ModRollerScene {
 
 
-	private final ModrollerConfig config;
 	private final GridPane grid;
 	private final ProgressBar progressBar;
 
 	private Label currentProgressLabel;
 	private TextArea textArea;
 
-	public ProcessPackagesScene(ModrollerConfig config) {
-		this.config = config;
+	public ProcessPackagesScene() {
 
 		grid = new GridPane();
 		grid.setPadding(new Insets(12, 12, 12, 12));
 
 		Label label1 = new Label("The BB2 data packages are currently being decompressed, do not close this window. This may take some time, do not worry if it pauses for a while.");
 		grid.addRow(0, label1);
-		Label label2 = new Label("If something goes wrong, you may need to reinstall Blood Bowl 2.");
+		Label label2 = new Label("If your BB2 client crashes afterwards, use the Steam 'Verify integrity of game files' option to reset the client, then retry this.");
 		grid.addRow(1, label2);
 
 
@@ -54,7 +52,7 @@ public class ProcessPackagesScene extends ModRollerScene {
 	}
 
 	private void process() {
-		ProcessPackagesTask processPackagesTask = new ProcessPackagesTask(config.getBb2Dir(), textArea, currentProgressLabel, progressBar, () -> {
+		ProcessPackagesTask processPackagesTask = new ProcessPackagesTask(ModrollerConfig.getInstance().getBb2Dir(), textArea, currentProgressLabel, progressBar, () -> {
 			if (completionHandler != null) {
 				completionHandler.onAction();
 			}

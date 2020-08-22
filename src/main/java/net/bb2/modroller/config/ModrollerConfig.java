@@ -4,6 +4,16 @@ import java.io.File;
 
 public class ModrollerConfig {
 
+	private static ModrollerConfig instance = new ModrollerConfig();
+
+	public static ModrollerConfig getInstance() {
+		return instance;
+	}
+
+	private ModrollerConfig() {
+
+	}
+
 	private File bb2Dir;
 
 	public File getBb2Dir() {
