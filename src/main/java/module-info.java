@@ -5,5 +5,8 @@ module modroller {
 	requires com.fasterxml.jackson.core;
 	requires com.fasterxml.jackson.databind;
 	requires javafx.controls;
-	requires org.eclipse.jgit;
+	requires java.sql;
+	requires java.security.jgss;
+	requires java.management;
+
 }
