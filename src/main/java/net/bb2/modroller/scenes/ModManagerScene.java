@@ -2,11 +2,11 @@ package net.bb2.modroller.scenes;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.bb2.modroller.config.ModInfo;
@@ -74,6 +74,31 @@ public class ModManagerScene extends ModRollerScene {
 				descriptionLabel.setPadding(leftPad20);
 
 				grid.addRow(cursor, checkbox, nameLabel, descriptionLabel);
+
+				if (modEntry.getValue().getPreviewImage() != null && modEntry.getValue().getPreviewImage().length() > 0) {
+					Button previewButton = new Button("Preview");
+					descriptionLabel.setPadding(new Insets(5, 20, 5, 20));
+
+					File previewFile = modEntry.getKey().toPath().resolve(modEntry.getValue().getPreviewImage()).toFile();
+					Image previewImage = new Image(previewFile.toURI().toString());
+					ImageView imageView = new ImageView(previewImage);
+
+					StackPane stackPane = new StackPane();
+					stackPane.getChildren().add(imageView);
+
+					Scene previewScene = new Scene(stackPane);
+
+					Stage previewWindow = new Stage();
+					previewWindow.setTitle(modEntry.getValue().getName() + " preview");
+					previewWindow.setScene(previewScene);
+
+					previewButton.setOnAction(event -> {
+						previewWindow.show();
+					});
+
+					grid.add(previewButton, 3, cursor);
+				}
+
 				cursor++;
 			}
 

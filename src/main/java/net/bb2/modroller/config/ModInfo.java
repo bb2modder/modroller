@@ -10,6 +10,7 @@ public class ModInfo {
 
 	private String name;
 	private String description;
+	private String previewImage;
 
 	private Map<String, String> files = new LinkedHashMap<>(); // Mapping of filename to path within data dir
 
@@ -27,6 +28,14 @@ public class ModInfo {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getPreviewImage() {
+		return previewImage;
+	}
+
+	public void setPreviewImage(String previewImage) {
+		this.previewImage = previewImage;
 	}
 
 	public Map<String, String> getFiles() {
