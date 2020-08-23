@@ -38,6 +38,7 @@ public class ProcessPackagesScene extends ModRollerScene {
 		grid.addRow(3, currentProgressLabel);
 
 		textArea = new TextArea();
+		textArea.setEditable(false);
 		textArea.setPrefWidth(650);
 		textArea.setPrefHeight(400);
 		grid.addRow(4, textArea);
