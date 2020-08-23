@@ -39,6 +39,18 @@ public class ModrollerConfig {
 		return modrollerDir;
 	}
 
+	public File getOrCreateBackupDir() throws IOException {
+		if (bb2Dir == null) {
+			return null;
+		}
+
+		File backupDir = getOrCreateModrollerDir().toPath().resolve("backup").toFile();
+		if (!backupDir.exists()) {
+			Files.createDirectories(backupDir.toPath());
+		}
+		return backupDir;
+	}
+
 	public void setModRepoDir(File modRepoDir) {
 		this.modRepoDir = modRepoDir;
 	}

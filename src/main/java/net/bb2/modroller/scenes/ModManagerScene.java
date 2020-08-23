@@ -18,6 +18,7 @@ import java.util.Map;
 public class ModManagerScene extends ModRollerScene {
 
 	private final GridPane grid;
+	private final TextArea textArea;
 	private Insets leftPad20 = new Insets(5, 0, 5, 20);
 	private final ModApplicator modApplicator;
 
@@ -31,7 +32,7 @@ public class ModManagerScene extends ModRollerScene {
 		scrollPane.setPrefSize(SceneDefaults.WIDTH, SceneDefaults.HEIGHT);
 		scrollPane.setContent(grid);
 
-		TextArea textArea = new TextArea();
+		textArea = new TextArea();
 		textArea.setEditable(false);
 
 		GridPane outerGrid = new GridPane();
@@ -61,10 +62,16 @@ public class ModManagerScene extends ModRollerScene {
 				CheckBox checkbox = new CheckBox();
 				checkbox.setPadding(leftPad20);
 				checkbox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
-					if (!aBoolean) {
-						modApplicator.install(modEntry.getKey(), modEntry.getValue());
-					} else {
-						modApplicator.uninstall(modEntry.getKey(), modEntry.getValue());
+					try {
+
+						if (!aBoolean) {
+							modApplicator.install(modEntry.getKey(), modEntry.getValue());
+						} else {
+							modApplicator.uninstall(modEntry.getKey(), modEntry.getValue());
+						}
+					} catch (Exception e) {
+						textArea.appendText("Error: " + e.getMessage() + "\n");
+						System.err.println(e);
 					}
 				});
 				Label nameLabel = new Label(modEntry.getValue().getName());
@@ -106,6 +113,7 @@ public class ModManagerScene extends ModRollerScene {
 			Label errorLabel = new Label("Error parsing mods: " + e.getMessage());
 			errorLabel.setTextFill(Color.web("#993333"));
 			grid.addRow(cursor + 1, errorLabel);
+			System.err.println(e);
 		}
 
 
