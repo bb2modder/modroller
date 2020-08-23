@@ -38,6 +38,7 @@ public class ModApplicator {
 		}
 
 		textArea.appendText("Installed " + modInfo.getName() + " successfully\n");
+		ModrollerConfig.getInstance().addInstalledMod(modDir.getName());
 	}
 
 	public void uninstall(File modDir, ModInfo modInfo) throws IOException {
@@ -61,6 +62,7 @@ public class ModApplicator {
 		}
 
 		textArea.appendText("Uninstalled " + modInfo.getName() + " successfully\n");
+		ModrollerConfig.getInstance().removeInstalledMod(modDir.getName());
 	}
 
 	private void backup(File targetFile, File backupDir, String filename, String replacementPath) throws IOException {

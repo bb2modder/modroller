@@ -11,9 +11,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.bb2.modroller.config.ModInfo;
 import net.bb2.modroller.config.ModParser;
+import net.bb2.modroller.config.ModrollerConfig;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Set;
 
 public class ModManagerScene extends ModRollerScene {
 
@@ -55,12 +57,14 @@ public class ModManagerScene extends ModRollerScene {
 
 		int cursor = 0;
 		try {
+			Set<String> installedMods = ModrollerConfig.getInstance().getInstalledMods();
 			Map<File, ModInfo> repoMods = new ModParser().getRepoMods();
 
 			for (Map.Entry<File, ModInfo> modEntry : repoMods.entrySet()) {
 
 				CheckBox checkbox = new CheckBox();
 				checkbox.setPadding(leftPad20);
+				checkbox.selectedProperty().setValue(installedMods.contains(modEntry.getKey().getName()));
 				checkbox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
 					try {
 

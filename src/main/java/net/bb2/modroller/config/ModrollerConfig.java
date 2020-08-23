@@ -1,8 +1,13 @@
 package net.bb2.modroller.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ModrollerConfig {
 
@@ -18,6 +23,8 @@ public class ModrollerConfig {
 	private File modRepoDir;
 
 	private File bb2Dir;
+
+	private Set<String> installedMods = new LinkedHashSet<>();
 
 	public File getBb2Dir() {
 		return bb2Dir;
@@ -57,5 +64,39 @@ public class ModrollerConfig {
 
 	public File getModRepoDir() {
 		return modRepoDir;
+	}
+
+	public Set<String> getInstalledMods() throws IOException {
+		installedMods.clear();
+		File installedFile = getInstalledModsFile();
+		if (installedFile.exists()) {
+			List<String> fileContents = new ObjectMapper().readValue(installedFile, List.class);
+			installedMods.addAll(fileContents);
+		}
+		return installedMods;
+	}
+
+	private File getInstalledModsFile() throws IOException {
+		return getOrCreateModrollerDir().toPath().resolve("installed.json").toFile();
+	}
+
+	public void addInstalledMod(String modDirName) throws IOException {
+		installedMods.add(modDirName);
+
+		refreshFileContent();
+	}
+
+	public void removeInstalledMod(String modDirName) throws IOException {
+		installedMods.remove(modDirName);
+
+		refreshFileContent();
+	}
+
+	private void refreshFileContent() throws IOException {
+		File installedModsFile = getInstalledModsFile();
+		if (installedModsFile.exists()) {
+			installedModsFile.delete();
+		}
+		new ObjectMapper().writeValue(installedModsFile, installedMods);
 	}
 }
