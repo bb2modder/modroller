@@ -52,6 +52,7 @@ public class JDKHttpConnection implements HttpConnection {
 			throws MalformedURLException,
 			IOException {
 		this.wrappedUrlConnection = (HttpURLConnection) url.openConnection();
+		HttpSupport.disableSslVerify(this);
 	}
 
 	/**
@@ -68,6 +69,7 @@ public class JDKHttpConnection implements HttpConnection {
 			throws MalformedURLException, IOException {
 		this.wrappedUrlConnection = (HttpURLConnection) url
 				.openConnection(proxy);
+		HttpSupport.disableSslVerify(this);
 	}
 
 	/** {@inheritDoc} */

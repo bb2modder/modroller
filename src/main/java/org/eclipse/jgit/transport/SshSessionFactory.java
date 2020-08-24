@@ -39,8 +39,8 @@ public abstract class SshSessionFactory {
 	private static org.eclipse.jgit.transport.SshSessionFactory INSTANCE = loadSshSessionFactory();
 
 	private static org.eclipse.jgit.transport.SshSessionFactory loadSshSessionFactory() {
-		ServiceLoader<org.eclipse.jgit.transport.SshSessionFactory> loader = ServiceLoader.load(org.eclipse.jgit.transport.SshSessionFactory.class);
-		Iterator<org.eclipse.jgit.transport.SshSessionFactory> iter = loader.iterator();
+		ServiceLoader<SshSessionFactory> loader = ServiceLoader.load(SshSessionFactory.class);
+		Iterator<SshSessionFactory> iter = loader.iterator();
 		if(iter.hasNext()) {
 			return iter.next();
 		}

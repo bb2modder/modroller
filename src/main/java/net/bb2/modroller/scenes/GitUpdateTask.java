@@ -5,10 +5,14 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import net.bb2.modroller.config.ModrollerConfig;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
 
 public class GitUpdateTask implements Runnable {
 
@@ -37,6 +41,7 @@ public class GitUpdateTask implements Runnable {
 			return;
 		}
 		try {
+			trustAllCerts();
 
 			File modRepoDir = modrollerDir.toPath().resolve("bb2modrepo").toFile();
 			if (modRepoDir.exists()) {
@@ -51,16 +56,45 @@ public class GitUpdateTask implements Runnable {
 
 			}
 			config.setModRepoDir(modRepoDir);
-		} catch (GitAPIException | IOException e) {
+		} catch (Exception e) {
 			Platform.runLater(() -> {
 				infoLabel.setText("Problem communicating with Git: " + e.getMessage());
 				infoLabel.setTextFill(Color.web("#993333"));
 			});
+			e.printStackTrace();
 			return;
 		}
 
 
 		Platform.runLater(callback::onAction);
+	}
+
+	private void trustAllCerts() throws NoSuchAlgorithmException, KeyManagementException {
+		TrustManager[] trustAllCerts = new TrustManager[] {
+				new X509TrustManager() {
+					public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+						return null;
+					}
+
+					public void checkClientTrusted(X509Certificate[] certs, String authType) {  }
+
+					public void checkServerTrusted(X509Certificate[] certs, String authType) {  }
+
+				}
+		};
+
+		SSLContext sc = SSLContext.getInstance("SSL");
+		sc.init(null, trustAllCerts, new java.security.SecureRandom());
+		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+		// Create all-trusting host name verifier
+		HostnameVerifier allHostsValid = new HostnameVerifier() {
+			public boolean verify(String hostname, SSLSession session) {
+				return true;
+			}
+		};
+		// Install the all-trusting host verifier
+		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 	}
 
 }

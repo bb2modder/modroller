@@ -8,5 +8,7 @@ module modroller {
 	requires java.sql;
 	requires java.security.jgss;
 	requires java.management;
+	requires jdk.crypto.ec;
+	uses org.eclipse.jgit.transport.SshSessionFactory;
 
 }
