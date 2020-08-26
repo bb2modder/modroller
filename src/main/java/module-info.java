@@ -6,9 +6,9 @@ module modroller {
 	requires com.fasterxml.jackson.databind;
 	requires javafx.controls;
 	requires java.sql;
+	requires java.xml;
 	requires java.security.jgss;
 	requires java.management;
 	requires jdk.crypto.ec;
 	uses org.eclipse.jgit.transport.SshSessionFactory;
-
 }

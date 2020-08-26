@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ModInfo {
 
 	private String name;
@@ -13,6 +12,7 @@ public class ModInfo {
 	private String previewImage;
 
 	private Map<String, String> files = new LinkedHashMap<>(); // Mapping of filename to path within data dir
+	private Map<String, Map<String, String>> xml = new LinkedHashMap<>();
 
 	public String getName() {
 		return name;
@@ -44,5 +44,13 @@ public class ModInfo {
 
 	public void setFiles(Map<String, String> files) {
 		this.files = files;
+	}
+
+	public Map<String, Map<String, String>> getXml() {
+		return xml;
+	}
+
+	public void setXml(Map<String, Map<String, String>> xml) {
+		this.xml = xml;
 	}
 }

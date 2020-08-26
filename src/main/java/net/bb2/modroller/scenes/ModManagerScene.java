@@ -14,8 +14,7 @@ import net.bb2.modroller.config.ModParser;
 import net.bb2.modroller.config.ModrollerConfig;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ModManagerScene extends ModRollerScene {
 
@@ -59,38 +58,41 @@ public class ModManagerScene extends ModRollerScene {
 		try {
 			Set<String> installedMods = ModrollerConfig.getInstance().getInstalledMods();
 			Map<File, ModInfo> repoMods = new ModParser().getRepoMods();
+			ArrayList<File> modDirs = new ArrayList<>(repoMods.keySet());
+			modDirs.sort(Comparator.comparing(File::getName));
 
-			for (Map.Entry<File, ModInfo> modEntry : repoMods.entrySet()) {
+			for (File modDir : modDirs) {
+				ModInfo modInfo = repoMods.get(modDir);
 
 				CheckBox checkbox = new CheckBox();
 				checkbox.setPadding(leftPad20);
-				checkbox.selectedProperty().setValue(installedMods.contains(modEntry.getKey().getName()));
+				checkbox.selectedProperty().setValue(installedMods.contains(modDir.getName()));
 				checkbox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
 					try {
 
 						if (!aBoolean) {
-							modApplicator.install(modEntry.getKey(), modEntry.getValue());
+							modApplicator.install(modDir, modInfo);
 						} else {
-							modApplicator.uninstall(modEntry.getKey(), modEntry.getValue());
+							modApplicator.uninstall(modDir, modInfo);
 						}
 					} catch (Exception e) {
 						textArea.appendText("Error: " + e.getMessage() + "\n");
 						System.err.println(e);
 					}
 				});
-				Label nameLabel = new Label(modEntry.getValue().getName());
+				Label nameLabel = new Label(modInfo.getName());
 				nameLabel.setStyle("-fx-font-weight: bold");
 				nameLabel.setPadding(leftPad20);
-				Label descriptionLabel = new Label(modEntry.getValue().getDescription());
+				Label descriptionLabel = new Label(modInfo.getDescription());
 				descriptionLabel.setPadding(leftPad20);
 
 				grid.addRow(cursor, checkbox, nameLabel, descriptionLabel);
 
-				if (modEntry.getValue().getPreviewImage() != null && modEntry.getValue().getPreviewImage().length() > 0) {
+				if (modInfo.getPreviewImage() != null && modInfo.getPreviewImage().length() > 0) {
 					Button previewButton = new Button("Preview");
 					descriptionLabel.setPadding(new Insets(5, 20, 5, 20));
 
-					File previewFile = modEntry.getKey().toPath().resolve(modEntry.getValue().getPreviewImage()).toFile();
+					File previewFile = modDir.toPath().resolve(modInfo.getPreviewImage()).toFile();
 					Image previewImage = new Image(previewFile.toURI().toString());
 					ImageView imageView = new ImageView(previewImage);
 
@@ -100,7 +102,7 @@ public class ModManagerScene extends ModRollerScene {
 					Scene previewScene = new Scene(stackPane);
 
 					Stage previewWindow = new Stage();
-					previewWindow.setTitle(modEntry.getValue().getName() + " preview");
+					previewWindow.setTitle(modInfo.getName() + " preview");
 					previewWindow.setScene(previewScene);
 
 					previewButton.setOnAction(event -> {
@@ -117,6 +119,9 @@ public class ModManagerScene extends ModRollerScene {
 			Label errorLabel = new Label("Error parsing mods: " + e.getMessage());
 			errorLabel.setTextFill(Color.web("#993333"));
 			grid.addRow(cursor + 1, errorLabel);
+			Label upgradeLabel = new Label("You may need to upgrade to a newer version of Modroller");
+			upgradeLabel.setTextFill(Color.web("#993333"));
+			grid.addRow(cursor + 2, upgradeLabel);
 			System.err.println(e);
 		}
 

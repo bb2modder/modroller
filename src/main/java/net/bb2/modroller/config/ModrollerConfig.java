@@ -99,4 +99,5 @@ public class ModrollerConfig {
 		}
 		new ObjectMapper().writeValue(installedModsFile, installedMods);
 	}
+
 }
