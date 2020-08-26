@@ -1,6 +1,5 @@
 package net.bb2.modroller.scenes;
 
-import org.eclipse.jgit.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -9,7 +8,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -20,7 +18,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +35,12 @@ public class ModXmlApplicator {
 		for (Map.Entry<String, String> entry : xpathToReplacementFiles.entrySet()) {
 			XPathExpression xPathExpression = xPathFactory.newXPath().compile(entry.getKey());
 
-			String replacementXml = Files.readString(modDir.toPath().resolve(entry.getValue()));
+			String replacementXml;
+			if (entry.getValue().startsWith("<")) {
+				replacementXml = entry.getValue();
+			} else {
+				replacementXml = Files.readString(modDir.toPath().resolve(entry.getValue()));
+			}
 			Node replacementNode = documentBuilderFactory.newDocumentBuilder()
 					.parse(new ByteArrayInputStream(replacementXml.getBytes()))
 					.getDocumentElement();
