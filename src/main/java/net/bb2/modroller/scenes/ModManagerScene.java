@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.bb2.modroller.config.ModInfo;
 import net.bb2.modroller.config.ModParser;
@@ -18,20 +17,26 @@ import java.util.*;
 
 public class ModManagerScene extends ModRollerScene {
 
-	private final GridPane grid;
+	private final TreeView treeView;
+	private final TreeItem rootTreeItem;
 	private final TextArea textArea;
 	private Insets leftPad20 = new Insets(5, 0, 5, 20);
 	private final ModApplicator modApplicator;
 
+	private Map<String, GridPane> groups = new LinkedHashMap<>();
+
 	public ModManagerScene() {
+		treeView = new TreeView();
+		treeView.setPrefWidth(SceneDefaults.WIDTH);
+		treeView.setPrefHeight(SceneDefaults.HEIGHT);
+		treeView.setPadding(new Insets(12, 12, 12, 12));
 
-
-		grid = new GridPane();
-		grid.setPadding(new Insets(12, 12, 12, 12));
+		rootTreeItem = new TreeItem("Mod listing");
+		treeView.setRoot(rootTreeItem);
 
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setPrefSize(SceneDefaults.WIDTH, SceneDefaults.HEIGHT);
-		scrollPane.setContent(grid);
+		scrollPane.setContent(treeView);
 
 		textArea = new TextArea();
 		textArea.setEditable(false);
@@ -52,9 +57,9 @@ public class ModManagerScene extends ModRollerScene {
 	}
 
 	private void populate() {
-		grid.getChildren().clear();
+		rootTreeItem.getChildren().clear();
+		rootTreeItem.setExpanded(true);
 
-		int cursor = 0;
 		try {
 			Set<String> installedMods = ModrollerConfig.getInstance().getInstalledMods();
 			Map<File, ModInfo> repoMods = new ModParser().getRepoMods();
@@ -63,6 +68,9 @@ public class ModManagerScene extends ModRollerScene {
 
 			for (File modDir : modDirs) {
 				ModInfo modInfo = repoMods.get(modDir);
+
+				String category = modInfo.getCategory();
+				GridPane grid = groups.computeIfAbsent(category, a -> new GridPane());
 
 				CheckBox checkbox = new CheckBox();
 				checkbox.setPadding(leftPad20);
@@ -86,7 +94,7 @@ public class ModManagerScene extends ModRollerScene {
 				Label descriptionLabel = new Label(modInfo.getDescription());
 				descriptionLabel.setPadding(leftPad20);
 
-				grid.addRow(cursor, checkbox, nameLabel, descriptionLabel);
+				grid.addRow(grid.getRowCount(), checkbox, nameLabel, descriptionLabel);
 
 				if (modInfo.getPreviewImage() != null && modInfo.getPreviewImage().length() > 0) {
 					Button previewButton = new Button("Preview");
@@ -109,19 +117,23 @@ public class ModManagerScene extends ModRollerScene {
 						previewWindow.show();
 					});
 
-					grid.add(previewButton, 3, cursor);
+					grid.add(previewButton, 3, grid.getRowCount() - 1);
 				}
 
-				cursor++;
 			}
 
+			List<String> groupNames = new ArrayList<>(groups.keySet());
+			groupNames.sort(String::compareTo);
+			for (String groupName : groupNames) {
+				TreeItem groupItem = new TreeItem(groupName);
+				groupItem.getChildren().add(new TreeItem<>(groups.get(groupName)));
+				rootTreeItem.getChildren().add(groupItem);
+			}
+
+
 		} catch (Exception e) {
-			Label errorLabel = new Label("Error parsing mods: " + e.getMessage());
-			errorLabel.setTextFill(Color.web("#993333"));
-			grid.addRow(cursor + 1, errorLabel);
-			Label upgradeLabel = new Label("You may need to upgrade to a newer version of Modroller");
-			upgradeLabel.setTextFill(Color.web("#993333"));
-			grid.addRow(cursor + 2, upgradeLabel);
+			textArea.appendText("Error parsing mods: " + e.getMessage() + "\n");
+			textArea.appendText("You may need to upgrade to a newer version of Modroller\n");
 			System.err.println(e);
 		}
 

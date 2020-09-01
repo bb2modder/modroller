@@ -1,13 +1,12 @@
 package net.bb2.modroller.config;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ModInfo {
 
 	private String name;
+	private String category;
 	private String description;
 	private String previewImage;
 
@@ -52,5 +51,17 @@ public class ModInfo {
 
 	public void setXml(Map<String, Map<String, String>> xml) {
 		this.xml = xml;
+	}
+
+	public String getCategory() {
+		if (category == null || category.length() == 0) {
+			return "Uncategorised";
+		} else {
+			return category;
+		}
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }
