@@ -1,27 +1,35 @@
 package net.bb2.modroller;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class BBDiscovery {
 
-	private final static List<String> expectedDirs = List.of("Program Files (x86)", "Steam", "steamapps", "common", "Blood Bowl 2");
+	private final static List<String> expectedDirsWindows = List.of("Program Files (x86)", "Steam", "steamapps", "common", "Blood Bowl 2");
+	private final static List<String> expectedDirsMac = List.of("Library", "Application Support", "Steam", "steamapps", "common", "Blood Bowl 2");
 
 	public Optional<File> findBB2Exe() {
+		String executableFileName = SystemUtils.IS_OS_MAC ? "BloodBowl2.app" : "BloodBowl2.exe";
+		List<String> expectedDirs = SystemUtils.IS_OS_MAC ? expectedDirsMac : expectedDirsWindows;
+
 		for (File driveRoot : File.listRoots()) {
 			Path cursor = driveRoot.toPath();
+			if (SystemUtils.IS_OS_MAC) {
+				cursor = SystemUtils.getUserHome().toPath();
+			}
 			for (String expectedDir : expectedDirs) {
 				cursor = cursor.resolve(expectedDir);
 			}
 
 			File possibleDir = cursor.toFile();
 			if (possibleDir.exists() && possibleDir.isDirectory()) {
-				File executable = cursor.resolve("BloodBowl2.exe").toFile();
-				if (executable.exists() && executable.isFile()) {
+				File executable = cursor.resolve(executableFileName).toFile();
+				if (executable.exists()) {
 					return Optional.of(executable);
 				}
 			}
@@ -36,8 +44,8 @@ public class BBDiscovery {
 
 			possibleDir = cursor.toFile();
 			if (possibleDir.exists() && possibleDir.isDirectory()) {
-				File executable = cursor.resolve("BloodBowl2.exe").toFile();
-				if (executable.exists() && executable.isFile()) {
+				File executable = cursor.resolve(executableFileName).toFile();
+				if (executable.exists()) {
 					return Optional.of(executable);
 				}
 			}

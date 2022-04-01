@@ -11,6 +11,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.bb2.modroller.BBDiscovery;
 import net.bb2.modroller.config.ModrollerConfig;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.io.File;
 
@@ -24,6 +25,7 @@ public class FindBaseDirScene extends ModRollerScene {
 	private final Button dirPickerButton;
 
 	private final Button processPackagesButton;
+	private final String executableName;
 
 	private File bbDirectory;
 	private boolean bbDirectoryCorrect = false;
@@ -42,8 +44,9 @@ public class FindBaseDirScene extends ModRollerScene {
 
 
 		fileChooser = new FileChooser();
-		fileChooser.setInitialFileName("BloodBowl2.exe");
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Executable", "BloodBowl2.exe"));
+		executableName = SystemUtils.IS_OS_MAC ? "BloodBowl2.app" : "BloodBowl2.exe";
+		fileChooser.setInitialFileName(executableName);
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Executable", executableName));
 
 		dirPickerButton = new Button("Find...");
 
@@ -82,7 +85,7 @@ public class FindBaseDirScene extends ModRollerScene {
 		bbDirectory = bb2Exe.getParentFile();
 		fileChooser.setInitialDirectory(bbDirectory);
 
-		setDirCorrect(bb2Exe.getName().equals("BloodBowl2.exe"));
+		setDirCorrect(bb2Exe.getName().equals(executableName));
 	}
 
 	private void setDirCorrect(boolean isCorrect) {

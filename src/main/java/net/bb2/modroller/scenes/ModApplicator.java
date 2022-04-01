@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
-import java.util.Set;
 
 public class ModApplicator {
 	private final TextArea textArea;
@@ -32,7 +31,11 @@ public class ModApplicator {
 				String replacementPath = fileEntry.getValue();
 
 				File targetFile = dataDir.resolve(replacementPath).resolve(filename).toFile();
-				backup(targetFile, backupDir, filename, replacementPath);
+				if (targetFile.exists()) {
+					backup(targetFile, backupDir, filename, replacementPath);
+				} else {
+					textArea.appendText("No existing file at " + targetFile + " to back up\n");
+				}
 
 				Path sourceFile = modDir.toPath().resolve(filename);
 
@@ -76,7 +79,7 @@ public class ModApplicator {
 
 				File backupFile = backupDir.toPath().resolve(replacementPath).resolve(filename).toFile();
 				if (!backupFile.exists()) {
-					textArea.appendText("Error: Can not find backup at " + backupFile.getAbsolutePath() + "\n");
+					textArea.appendText("Warning: No backup at " + backupFile.getAbsolutePath() + "\n");
 				} else {
 					File targetFile = dataDir.resolve(replacementPath).resolve(filename).toFile();
 					textArea.appendText("Copying backup of " + filename + " to " + targetFile.getAbsolutePath() + "\n");

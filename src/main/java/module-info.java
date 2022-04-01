@@ -10,5 +10,6 @@ module modroller {
 	requires java.security.jgss;
 	requires java.management;
 	requires jdk.crypto.ec;
+	requires org.apache.commons.lang3;
 	uses org.eclipse.jgit.transport.SshSessionFactory;
 }

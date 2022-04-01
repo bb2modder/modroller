@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,15 +57,17 @@ public class ProcessPackagesTask implements Runnable {
 			}
 		}
 
-		File quickBms = new File("assets/bms/quickbms.exe");
+
+
+		File quickBms = SystemUtils.IS_OS_MAC ? new File("assets/bms/quickbms") : new File("assets/bms/quickbms.exe");
 		if (!quickBms.exists()) {
 			Platform.runLater(() -> {
-				currentProgressLabel.setText("Can not find quickbms.exe");
+				currentProgressLabel.setText("Can not find quickbms");
 			});
 			return;
 		}
 		File bb2Bms = new File("assets/bms/bloodbowl2.bms");
-		if (!quickBms.exists()) {
+		if (!bb2Bms.exists()) {
 			Platform.runLater(() -> {
 				currentProgressLabel.setText("Can not find bloodbowl2.bms");
 			});
