@@ -10,8 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.bb2.modroller.BBDiscovery;
+import net.bb2.modroller.OsCheck;
 import net.bb2.modroller.config.ModrollerConfig;
-import org.apache.commons.lang3.SystemUtils;
 
 import java.io.File;
 
@@ -44,7 +44,7 @@ public class FindBaseDirScene extends ModRollerScene {
 
 
 		fileChooser = new FileChooser();
-		executableName = SystemUtils.IS_OS_MAC ? "BloodBowl2.app" : "BloodBowl2.exe";
+		executableName = OsCheck.IS_MAC_OS ? "BloodBowl2.app" : "BloodBowl2.exe";
 		fileChooser.setInitialFileName(executableName);
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Executable", executableName));
 

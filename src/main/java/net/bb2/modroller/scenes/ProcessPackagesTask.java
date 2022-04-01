@@ -5,7 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
-import org.apache.commons.lang3.SystemUtils;
+import net.bb2.modroller.OsCheck;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -59,7 +59,7 @@ public class ProcessPackagesTask implements Runnable {
 
 
 
-		File quickBms = SystemUtils.IS_OS_MAC ? new File("assets/bms/quickbms") : new File("assets/bms/quickbms.exe");
+		File quickBms = OsCheck.IS_MAC_OS ? new File("assets/bms/quickbms") : new File("assets/bms/quickbms.exe");
 		if (!quickBms.exists()) {
 			Platform.runLater(() -> {
 				currentProgressLabel.setText("Can not find quickbms");

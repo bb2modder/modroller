@@ -1,7 +1,5 @@
 package net.bb2.modroller;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -14,13 +12,13 @@ public class BBDiscovery {
 	private final static List<String> expectedDirsMac = List.of("Library", "Application Support", "Steam", "steamapps", "common", "Blood Bowl 2");
 
 	public Optional<File> findBB2Exe() {
-		String executableFileName = SystemUtils.IS_OS_MAC ? "BloodBowl2.app" : "BloodBowl2.exe";
-		List<String> expectedDirs = SystemUtils.IS_OS_MAC ? expectedDirsMac : expectedDirsWindows;
+		String executableFileName = OsCheck.IS_MAC_OS ? "BloodBowl2.app" : "BloodBowl2.exe";
+		List<String> expectedDirs = OsCheck.IS_MAC_OS ? expectedDirsMac : expectedDirsWindows;
 
 		for (File driveRoot : File.listRoots()) {
 			Path cursor = driveRoot.toPath();
-			if (SystemUtils.IS_OS_MAC) {
-				cursor = SystemUtils.getUserHome().toPath();
+			if (OsCheck.IS_MAC_OS) {
+				cursor = new File(System.getProperty("user.home")).toPath();
 			}
 			for (String expectedDir : expectedDirs) {
 				cursor = cursor.resolve(expectedDir);
