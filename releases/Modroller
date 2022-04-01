@@ -1,0 +1,4 @@
+#!/bin/bash
+# see https://apple.stackexchange.com/questions/224394/how-to-make-a-mac-os-x-app-with-a-shell-script
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+${SCRIPT_DIR}/bin/java -m modroller/net.bb2.modroller.DesktopLauncher
